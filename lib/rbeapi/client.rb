@@ -104,7 +104,9 @@ module Rbeapi
         config['host'] = name if config['host'] == '*'
         config = Rbeapi::Utils.transform_keys_to_symbols(config)
         connection = connect config
-        Node.new(connection)
+        node = Node.new(connection)
+        node.enable_authentication(config[:enablepwd]) if config[:enablepwd]
+        node
       end
 
       ##
