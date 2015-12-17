@@ -94,7 +94,7 @@ module Rbeapi
                               (username\s+#{name}\s+
                                sshkey\s+(?<sshkey>.*)$)?/x)
         user = config.scan(user_re)
-        return nil unless user
+        return nil unless user && user[0]
         parse_user_entry(user[0])
       end
 
@@ -182,7 +182,8 @@ module Rbeapi
       # @option :opts [Boolean] :nopassword Configures the user to be able to
       #   authenticate without a password challenge
       #
-      # @option :opts [String] :secret The secret (password) to assign to this user
+      # @option :opts [String] :secret The secret (password) to assign to this
+      #   user
       #
       # @option :opts [String] :encryption Specifies how the secret is encoded.
       #   Valid values are "cleartext", "md5", "sha512".  The default is
@@ -212,7 +213,8 @@ module Rbeapi
           enc = @encryption_map[enc]
 
           unless opts[:secret]
-            fail ArgumentError, 'secret must be specified if nopassword is false'
+            fail ArgumentError,
+                 'secret must be specified if nopassword is false'
           end
           cmd << " secret #{enc} #{opts[:secret]}"
         end
